@@ -6,7 +6,7 @@
 /*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 13:59:15 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/28 22:38:00 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/08/29 11:20:14 by tanguy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ static void	handle_32(struct mach_header *header, struct symtab_command *symtab)
 	print_32((void*)header + symtab->stroff, symtab->nsyms, (void*)header + symtab->symoff);
 }
 
-static void	handle_swap_fat(struct fat_header *header)
+static int	handle_swap_fat(struct fat_header *header)
 {
 	struct fat_arch	*arch;
 	uint32_t		nfat_arch;
@@ -223,18 +223,18 @@ static void	handle_swap_fat(struct fat_header *header)
 		// 	break;
 		arch = arch + 1;
 	}
-	nm(&file);
+	return (nm(&file));
 }
 
 int		nm(t_file *file)
 {
 	// printf("%x\n", file->magic);
-	if (file->magic == MH_MAGIC_64 || file->magic == MH_CIGAM_64)
+	if (file->magic == MH_MAGIC_64)
 		handle_64(file->map, NULL);
-	else if (file->magic == MH_MAGIC || file->magic == MH_CIGAM)
+	else if (file->magic == MH_MAGIC)
 		handle_32(file->map, NULL);
 	else if (file->magic == FAT_CIGAM)
-		handle_swap_fat(file->map);
+		return (handle_swap_fat(file->map) + 2);
 	else
 		return (0);
 	return (1);

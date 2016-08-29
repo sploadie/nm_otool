@@ -6,7 +6,7 @@
 /*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 12:12:46 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/28 20:23:46 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/08/29 11:09:44 by tanguy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,15 @@
 
 static void	read_nm(t_file *file)
 {
+	int		ret;
+
 	if (file == NULL)
 		return (ft_putstr("Could not access file.\n"));
-	if (nm(file) == 0)
+	ret = nm(file);
+	if (ret == 0)
 		return (ft_putstr("File type not found.\n"));
+	else if (ret == 2)
+		return (ft_putstr("Fat did not contain known architecture.\n"));
 	file_delete(file);
 }
 
