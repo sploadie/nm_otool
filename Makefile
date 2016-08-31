@@ -6,12 +6,12 @@
 #    By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/20 16:35:37 by tgauvrit          #+#    #+#              #
-#    Updated: 2016/08/28 19:41:31 by tanguy           ###   ########.fr        #
+#    Updated: 2016/08/31 08:32:13 by tanguy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME1 =			nm
-NAME2 =			otool
+NAME1 =			ft_nm
+NAME2 =			ft_otool
 
 CC =			clang
 
@@ -65,6 +65,6 @@ clean:
 	/usr/bin/find . -name "$(OBJ_DIR_NAME)" -maxdepth 1 -type d -empty -delete
 
 fclean: clean
-	-/bin/rm -f $(NAME) $(LINK)
+	-/bin/rm -f $(NAME1) $(NAME2)
 
 re: fclean all

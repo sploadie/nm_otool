@@ -6,7 +6,7 @@
 /*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/03 15:35:45 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/08/28 22:10:35 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/08/29 12:02:17 by tanguy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ t_file				*file_create(char *filename);
 void				file_delete(t_file	*file);
 
 int					nm(t_file *file);
+int					otool(t_file *file);
 
 void				multiprint(int size, ...);
 

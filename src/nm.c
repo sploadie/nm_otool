@@ -6,7 +6,7 @@
 /*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 13:59:15 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/29 11:20:14 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/08/29 11:51:39 by tanguy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,8 @@ static void print_32(char *names, int nsyms, struct nlist *symbols)
 		hex[17] = get_type(symbols[i].n_type, symbols[i].n_sect);
 		strings[i].str = ft_strjoin(hex, names + symbols[i].n_un.n_strx);
 		strings[i].name = names + symbols[i].n_un.n_strx;
-		ft_putstr(hex);
-		ft_putendl(names + symbols[i].n_un.n_strx);
+		// ft_putstr(hex);
+		// ft_putendl(names + symbols[i].n_un.n_strx);
 		// printf("%c %s\n", get_type(symbols[i].n_type, symbols[i].n_sect), names + symbols[i].n_un.n_strx);
 		// printf("%c %u %u %u %s\n", get_type(symbols[i].n_type, symbols[i].n_type, symbols[i].n_sect, symbols[i].n_desc, names + symbols[i].n_un.n_strx);
 		// multiprint(2, names + symbols[i].n_un.n_strx, "\n");
