@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 13:59:15 by tanguy            #+#    #+#             */
-/*   Updated: 2016/09/01 15:39:19 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/01 16:28:10 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,16 +88,17 @@ static void print_64(char *names, int nsyms, struct nlist_64 *symbols)
 	{
 		ft_memset(hex, ' ', 19);
 		hex[19] = 0;
+		hex[17] = get_type(symbols[i].n_type, symbols[i].n_sect, symbols[i].n_value);
 		if (symbols[i].n_type != 0x1)
 			fill_hex(hex, 15, symbols[i].n_value);
-		hex[17] = get_type(symbols[i].n_type, symbols[i].n_sect, symbols[i].n_value);
 		strings[i] = ft_strjoin(hex, names + symbols[i].n_un.n_strx);
 	}
 	sort_sym(strings, nsyms);
 	i = -1;
 	while (++i < nsyms)
 	{
-		ft_putendl(strings[i]);
+		if (strings[i][17] != '-')
+			ft_putendl(strings[i]);
 		free(strings[i]);
 	}
 }
