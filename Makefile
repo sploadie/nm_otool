@@ -32,7 +32,7 @@ SRC_DIR =		./src/
 OBJ_DIR_NAME =	obj
 OBJ_DIR =		./obj/
 
-SHARED_FILES =	file_data multiprint swap
+SHARED_FILES =	file_data multiprint swap sections
 FILENAMES1 :=	nm_main nm
 FILENAMES2 :=	otool_main
 

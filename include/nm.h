@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/03 15:35:45 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/08/29 12:02:17 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/09/01 12:09:19 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,21 @@ typedef struct		s_sym
 	char			*name;
 }					t_sym;
 
+typedef struct		s_section_num
+{
+	uint32_t		text;
+	uint32_t		data;
+	uint32_t		bss;
+	uint32_t		nsect;
+}					t_section_num;
+
 t_file				*file_create(char *filename);
 void				file_delete(t_file	*file);
 
 int					nm(t_file *file);
 int					otool(t_file *file);
+
+t_section_num		*section_numbers(struct load_command *lc, uint32_t ncmds);
 
 void				multiprint(int size, ...);
 
