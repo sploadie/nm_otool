@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 13:59:15 by tanguy            #+#    #+#             */
-/*   Updated: 2016/09/01 16:28:10 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/01 19:58:14 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ static void	fill_hex(char *buf, int index, uint64_t num)
 
 static void sort_sym(char **a, size_t size)
 {
-	size_t i;
-	size_t j;
+	int		ret;
+	size_t	i;
+	size_t	j;
 
 	i = -1;
 	while (++i <  size - 1)
@@ -35,7 +36,9 @@ static void sort_sym(char **a, size_t size)
 		j = -1;
 		while (++j < size - i - 1)
 		{
-			if (ft_strcmp(a[j] + 19, a[j + 1] + 19) > 0)
+			ret = ft_strcmp(a[j] + 19, a[j + 1] + 19);
+			if (ret > 0 || (
+				ret == 0 && ft_strncmp(a[j] + 17, a[j + 1] + 17, 1) < 0))
 				ft_memswap(a + j, a + j + 1, sizeof(char*));
 		}
 	}
@@ -145,7 +148,8 @@ static void print_32(char *names, int nsyms, struct nlist *symbols)
 	i = -1;
 	while (++i < nsyms)
 	{
-		ft_putendl(strings[i]);
+		if (strings[i][17] != '-')
+			ft_putendl(strings[i] + 8);
 		free(strings[i]);
 	}
 }
@@ -172,25 +176,32 @@ static void	handle_32(struct mach_header *header, struct symtab_command *symtab)
 	print_32((void*)header + symtab->stroff, symtab->nsyms, (void*)header + symtab->symoff);
 }
 
-static int	handle_swap_fat(struct fat_header *header)
+static int	handle_swap_fat(struct fat_header *header, uint32_t nfat_arch)
 {
-	struct fat_arch	*arch;
-	uint32_t		nfat_arch;
-	t_file			file;
-	uint32_t		magic;
+	struct fat_arch			*arch;
+	t_file					file;
+	struct mach_header		*mach;
 
 	nfat_arch = swap_uint32(header->nfat_arch);
 	arch = (void*)(header + 1);
 	while (nfat_arch--)
 	{
-		magic = *(unsigned int*)((void*)header + swap_uint32(arch->offset));
-		if (magic == MH_MAGIC_64 || magic == MH_MAGIC)
+		mach = (void*)((void*)header + swap_uint32(arch->offset));
+		if (mach->magic == MH_MAGIC_64 && mach->cputype == CPU_TYPE_X86_64)
 		{
-			file.magic = magic;
 			file.map = (void*)header + swap_uint32(arch->offset);
+			if (__POINTER_WIDTH__ == 64)
+				break ;
+		}
+		if (mach->magic == MH_MAGIC && mach->cputype == CPU_TYPE_X86)
+		{
+			file.map = (void*)header + swap_uint32(arch->offset);
+			if (__POINTER_WIDTH__ == 32)
+				break ;
 		}
 		arch = arch + 1;
 	}
+	file.magic = *(unsigned int*)file.map;
 	return (nm(&file));
 }
 
@@ -201,7 +212,7 @@ int		nm(t_file *file)
 	else if (file->magic == MH_MAGIC)
 		handle_32(file->map, NULL);
 	else if (file->magic == FAT_CIGAM)
-		return (handle_swap_fat(file->map) + 2);
+		return (handle_swap_fat(file->map, 0) + 2);
 	else
 		return (0);
 	return (1);
