@@ -6,13 +6,14 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 13:59:15 by tanguy            #+#    #+#             */
-/*   Updated: 2016/09/02 15:16:50 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/02 15:24:17 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-static void	handle_64(struct mach_header_64 *header, struct symtab_command *symtab)
+static void	handle_64(struct mach_header_64 *header,
+	struct symtab_command *symtab)
 {
 	unsigned int		i;
 	struct load_command	*lc;
@@ -31,10 +32,12 @@ static void	handle_64(struct mach_header_64 *header, struct symtab_command *symt
 	}
 	if (symtab == NULL)
 		return (ft_putstr("No symbol table found.\n"));
-	print_64((void*)header + symtab->stroff, symtab->nsyms, (void*)header + symtab->symoff);
+	print_64((void*)header + symtab->stroff, symtab->nsyms,
+		(void*)header + symtab->symoff);
 }
 
-static void	handle_32(struct mach_header *header, struct symtab_command *symtab)
+static void	handle_32(struct mach_header *header,
+	struct symtab_command *symtab)
 {
 	unsigned int		i;
 	struct load_command	*lc;
@@ -53,7 +56,8 @@ static void	handle_32(struct mach_header *header, struct symtab_command *symtab)
 	}
 	if (symtab == NULL)
 		return (ft_putstr("No symbol table found.\n"));
-	print_32((void*)header + symtab->stroff, symtab->nsyms, (void*)header + symtab->symoff);
+	print_32((void*)header + symtab->stroff, symtab->nsyms,
+		(void*)header + symtab->symoff);
 }
 
 static int	handle_swap_fat(struct fat_header *header, uint32_t nfat_arch)
