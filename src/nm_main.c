@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nm_main.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 12:12:46 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/29 11:45:05 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/09/02 15:10:27 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int			main(int argc, char **argv)
 	if (argc < 2)
 	{
 		ft_putstr("Usage: ./ft_nm FILE1 [FILE2 ...]");
-		return 1;
+		return (1);
 	}
 	i = 0;
 	while (++i < argc)
@@ -42,5 +42,5 @@ int			main(int argc, char **argv)
 			multiprint(3, "\n", argv[i], ": ");
 		read_nm(file_create(argv[i]));
 	}
-	return 0;
+	return (0);
 }

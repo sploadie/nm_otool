@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/01 11:13:55 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/09/02 12:42:20 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/02 15:11:04 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ static void		get_sections(t_section_num *secs, uint32_t i, struct section *s, si
 {
 	while (i-- > 0)
 	{
-		if(ft_strcmp(s->sectname, SECT_TEXT) == 0 && ft_strcmp(s->segname, SEG_TEXT) == 0)
+		if (ft_strcmp(s->sectname, SECT_TEXT) == 0 && ft_strcmp(s->segname, SEG_TEXT) == 0)
 			secs->text = secs->nsect;
-		else if(ft_strcmp(s->sectname, SECT_DATA) == 0 && ft_strcmp(s->segname, SEG_DATA) == 0)
+		else if (ft_strcmp(s->sectname, SECT_DATA) == 0 && ft_strcmp(s->segname, SEG_DATA) == 0)
 			secs->data = secs->nsect;
-		else if(ft_strcmp(s->sectname, SECT_BSS) == 0 && ft_strcmp(s->segname, SEG_DATA) == 0)
+		else if (ft_strcmp(s->sectname, SECT_BSS) == 0 && ft_strcmp(s->segname, SEG_DATA) == 0)
 			secs->bss = secs->nsect;
 		s = (void*)s + size;
 		secs->nsect++;

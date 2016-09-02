@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 12:12:46 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/28 14:05:59 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/09/02 15:09:32 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ t_file	*file_create(char *filename)
 		== MAP_FAILED)
 	{
 		free(file);
-		return NULL;
+		return (NULL);
 	}
 	close(fd);
 	file->magic = *(unsigned int*)(file->map);
-	return file;
+	return (file);
 }
 
 void	file_delete(t_file *file)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+         #
+#    By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/20 16:35:37 by tgauvrit          #+#    #+#              #
-#    Updated: 2016/08/31 08:32:13 by tanguy           ###   ########.fr        #
+#    Updated: 2016/09/02 15:13:47 by tgauvrit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ SRC_DIR =		./src/
 OBJ_DIR_NAME =	obj
 OBJ_DIR =		./obj/
 
-SHARED_FILES =	file_data multiprint swap sections
+SHARED_FILES =	file_data multiprint swap sections print_symbols
 FILENAMES1 :=	nm_main nm
 FILENAMES2 :=	otool_main
 

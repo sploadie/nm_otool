@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 12:12:46 by tanguy            #+#    #+#             */
-/*   Updated: 2016/09/02 14:57:57 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/02 15:12:02 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	otool_64(void *file, struct section_64 *sect, uint32_t nsects)
 {
 	while (nsects--)
 	{
-		if(ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
 		{
 			print_section(file, (void*)sect, sizeof(*sect));
 			return (1);
@@ -86,7 +86,7 @@ static int	otool_32(void *file, struct section *sect, uint32_t nsects)
 {
 	while (nsects--)
 	{
-		if(ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
 		{
 			print_section(file, (void*)sect, sizeof(*sect));
 			return (1);
@@ -183,7 +183,7 @@ int			main(int argc, char **argv)
 	if (argc < 2)
 	{
 		ft_putstr("Usage: ./ft_otool FILE1 [FILE2 ...]");
-		return 1;
+		return (1);
 	}
 	i = 0;
 	while (++i < argc)
@@ -191,5 +191,5 @@ int			main(int argc, char **argv)
 		multiprint(2, argv[i], ":\n");
 		do_otool(file_create(argv[i]));
 	}
-	return 0;
+	return (0);
 }

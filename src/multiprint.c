@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   multiprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 13:14:24 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/28 13:25:48 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/09/02 15:09:08 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	multiprint(int size, ...)
 {
-	int i;
-	va_list strings;
+	int		i;
+	va_list	strings;
 
 	va_start(strings, size);
 	i = 0;
@@ -23,4 +23,3 @@ void	multiprint(int size, ...)
 		ft_putstr(va_arg(strings, char*));
 	va_end(strings);
 }
-
