@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   otool_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tanguy <tanguy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 12:12:46 by tanguy            #+#    #+#             */
-/*   Updated: 2016/08/29 12:04:36 by tanguy           ###   ########.fr       */
+/*   Updated: 2016/09/02 14:57:57 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-static void	print_hex(long num, int depth)
+static void	print_hex(uint64_t num, int depth)
 {
 	if (depth == 0)
 		return ;
 	print_hex(num >> 4, depth - 1);
-	num -= (num >> 4) << 4;
+	num = num & 0xF;
 	if (num < 10)
 		num += '0';
 	else
@@ -25,82 +25,138 @@ static void	print_hex(long num, int depth)
 	write(1, &num, 1);
 }
 
-static void	handle_32(struct mach_header *header, struct segment_command *seg)
+static void	set_sect_data(struct section_64 *data, struct section *sect, size_t size)
 {
-	unsigned int		i;
-	struct load_command	*lc;
+	ft_memcpy(data, sect, size);
+	if (size == sizeof(struct section_64))
+		return ;
+	data->addr = sect->addr;
+	data->size = sect->size;
+	data->offset = sect->offset;
+	data->align = sect->align;
+	data->reloff = sect->reloff;
+	data->nreloc = sect->nreloc;
+	data->flags = sect->flags;
+}
 
-	lc = (struct load_command *)(header + 1);
-	i = 0;
-	while (i++ < header->ncmds)
+static void	print_section(t_file *file, struct section *sect, size_t size)
+{
+	void				*start;
+	uint32_t			offset;
+	uint32_t			i;
+	uint8_t				byte_word;
+	struct section_64	data;
+
+	set_sect_data(&data, sect, size);
+	multiprint(5, "(", data.segname, ",", data.sectname, ") section\n");
+	start = (void*)file->map + data.offset;
+	offset = 0;
+	while (offset < data.size)
+	{
+		print_hex((uint64_t)(data.addr + offset), (file->magic == MH_MAGIC ? 8 : 16));
+		write(1, " ", 1);
+		i = 0;
+		while (i < 16 * sizeof(char) && offset + i < data.size)
+		{
+			byte_word = *(uint8_t*)(start + offset + i);
+			print_hex(byte_word, 2);
+			write(1, " ", 1);
+			i += sizeof(char);
+		}
+		write(1, "\n", 1);
+		offset += i;
+	}
+}
+
+static int	otool_64(void *file, struct section_64 *sect, uint32_t nsects)
+{
+	while (nsects--)
+	{
+		if(ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		{
+			print_section(file, (void*)sect, sizeof(*sect));
+			return (1);
+		}
+		sect += 1;
+	}
+	return (0);
+}
+
+static int	otool_32(void *file, struct section *sect, uint32_t nsects)
+{
+	while (nsects--)
+	{
+		if(ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		{
+			print_section(file, (void*)sect, sizeof(*sect));
+			return (1);
+		}
+		sect += 1;
+	}
+	return (0);
+}
+
+static void	handle_arch(void *file, struct load_command *lc, size_t size)
+{
+	int			ret;
+	uint32_t	ncmds;
+
+	ret = 0;
+	ncmds = ((struct mach_header*)lc)->ncmds;
+	lc = (void*)lc + size;
+	while (ncmds-- > 0)
 	{
 		if (lc->cmd == LC_SEGMENT)
 		{
-			seg = (void*)lc;
-			break;
+			ret |= otool_32(file, (void*)lc + sizeof(struct segment_command), ((struct segment_command*)lc)->nsects);
 		}
-		lc = (void*)lc + lc->cmdsize;
-	}
-	if (seg == NULL)
-		return (ft_putstr("No __TEXT segment found.\n"));
-	//PRINT
-	print_hex(0x32, 4);
-	write(1, "\n", 1);
-}
-
-static void	handle_64(struct mach_header *header, struct segment_command_64 *seg)
-{
-	unsigned int		i;
-	struct load_command	*lc;
-
-	lc = (struct load_command *)(header + 1);
-	i = 0;
-	while (i++ < header->ncmds)
-	{
-		if (lc->cmd == LC_SEGMENT)
+		if (lc->cmd == LC_SEGMENT_64)
 		{
-			seg = (void*)lc;
-			break;
+			ret |= otool_64(file, (void*)lc + sizeof(struct segment_command_64), ((struct segment_command_64*)lc)->nsects);
 		}
 		lc = (void*)lc + lc->cmdsize;
 	}
-	if (seg == NULL)
-		return (ft_putstr("No __TEXT segment found.\n"));
-	//PRINT
-	print_hex(0x64, 4);
-	write(1, "\n", 1);
+	if (ret == 0)
+		ft_putstr("No __text section found.\n");
 }
 
-static int	handle_swap_fat(struct fat_header *header)
+static int	otool_fat(struct fat_header *header, uint32_t nfat_arch)
 {
-	struct fat_arch	*arch;
-	uint32_t		nfat_arch;
-	t_file			file;
-	uint32_t		magic;
+	struct fat_arch			*arch;
+	t_file					file;
+	struct mach_header		*mach;
 
 	nfat_arch = swap_uint32(header->nfat_arch);
 	arch = (void*)(header + 1);
 	while (nfat_arch--)
 	{
-		magic = *(unsigned int*)((void*)header + swap_uint32(arch->offset));
-		if (magic == MH_MAGIC_64 || magic == MH_MAGIC)
+		mach = (void*)((void*)header + swap_uint32(arch->offset));
+		if (mach->magic == MH_MAGIC_64 && mach->cputype == CPU_TYPE_X86_64)
 		{
-			file.magic = magic;
 			file.map = (void*)header + swap_uint32(arch->offset);
+			if (__POINTER_WIDTH__ == 64)
+				break ;
+		}
+		if (mach->magic == MH_MAGIC && mach->cputype == CPU_TYPE_X86)
+		{
+			file.map = (void*)header + swap_uint32(arch->offset);
+			if (__POINTER_WIDTH__ == 32)
+				break ;
 		}
 		arch = arch + 1;
 	}
+	file.magic = *(unsigned int*)file.map;
 	return (otool(&file));
 }
 
 int			otool(t_file *file)
 {
 	if (file->magic == MH_MAGIC_64)
-		handle_64(file->map, NULL);
+		handle_arch(file, file->map, sizeof(struct mach_header_64));
 	else if (file->magic == MH_MAGIC)
-		handle_32(file->map, NULL);
+		handle_arch(file, file->map, sizeof(struct mach_header));
 	else if (file->magic == FAT_CIGAM)
-		return (handle_swap_fat(file->map) + 2);
+		return (otool_fat(file->map, 0) + 2);
 	else
 		return (0);
 	return (1);
@@ -132,8 +188,7 @@ int			main(int argc, char **argv)
 	i = 0;
 	while (++i < argc)
 	{
-		if (argc > 2)
-			multiprint(3, "\n", argv[i], ": ");
+		multiprint(2, argv[i], ":\n");
 		do_otool(file_create(argv[i]));
 	}
 	return 0;
