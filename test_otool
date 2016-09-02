@@ -1,0 +1,3 @@
+#!/bin/bash
+
+diff -y <(./ft_otool $@) <(otool -t $@)

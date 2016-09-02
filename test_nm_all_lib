@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function color() {
+    prompt="$1"
+    echo -e -n "\033[1;36m$prompt"
+    echo -e    '\033[0m'
+}
+
+FILES=`ls -1 $1 | egrep -v ".a$"`
+
+for FILE in $FILES; do
+	NM=`nm "$1/$FILE" 2>/dev/null`
+	if [ "$?" == "0" ]; then
+		DIFF=$(diff -y --suppress-common-lines <(./ft_nm "$1/$FILE") <(nm "$1/$FILE") | head -n20)
+		if [ -z "$DIFF" ]; then 
+			echo "$1/$FILE :"
+		else
+			color "$1/$FILE :"
+			echo "$DIFF"
+			exit
+		fi
+	fi
+done
