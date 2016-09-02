@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/03 15:35:45 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/09/02 15:16:05 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/02 16:43:32 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,12 @@ void				file_delete(t_file	*file);
 int					nm(t_file *file);
 int					otool(t_file *file);
 
-void		print_64(char *names, int nsyms, struct nlist_64 *symbols);
-void		print_32(char *names, int nsyms, struct nlist *symbols);
+void				print_64(char *names, int nsyms, struct nlist_64 *symbols);
+void				print_32(char *names, int nsyms, struct nlist *symbols);
 
+int					otool_64(void *file, struct section_64 *sect,
+	uint32_t nsects);
+int					otool_32(void *file, struct section *sect, uint32_t nsects);
 
 t_section_num		*section_numbers(struct load_command *lc, uint32_t ncmds);
 

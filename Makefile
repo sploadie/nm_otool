@@ -6,7 +6,7 @@
 #    By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/20 16:35:37 by tgauvrit          #+#    #+#              #
-#    Updated: 2016/09/02 15:13:47 by tgauvrit         ###   ########.fr        #
+#    Updated: 2016/09/02 16:34:22 by tgauvrit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ OBJ_DIR =		./obj/
 
 SHARED_FILES =	file_data multiprint swap sections print_symbols
 FILENAMES1 :=	nm_main nm
-FILENAMES2 :=	otool_main
+FILENAMES2 :=	otool_main otool_print
 
 OBJ_PATHS1 :=	$(addsuffix .o,$(SHARED_FILES) $(FILENAMES1))
 OBJ_PATHS1 :=	$(addprefix $(OBJ_DIR),$(OBJ_PATHS1))
