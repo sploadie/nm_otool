@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/28 12:12:46 by tanguy            #+#    #+#             */
-/*   Updated: 2016/09/02 15:10:27 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/09/13 16:57:09 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ int			main(int argc, char **argv)
 
 	if (argc < 2)
 	{
-		ft_putstr("Usage: ./ft_nm FILE1 [FILE2 ...]");
-		return (1);
+		read_nm(file_create("a.out"));
+		return (0);
 	}
 	i = 0;
 	while (++i < argc)
 	{
 		if (argc > 2)
-			multiprint(3, "\n", argv[i], ": ");
+			multiprint(3, "\n", argv[i], ":\n");
 		read_nm(file_create(argv[i]));
 	}
 	return (0);
